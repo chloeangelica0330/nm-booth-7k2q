@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,600&family=Hanken+Grotesk:wght@400;500;600&display=swap">
 <style>
 /* Naumi brand: red / black / white lead, the secondary palette as quiet accents.
-   Layout: the black booth window on the left, the printed strip resting on a blush counter on the right. */
+   Flow: welcome, then four steps (design, pose, finish, print), then a thank-you. One screen at a time. */
 :root{
   --bg:#fcf7f6; --surface:#ffffff; --ink:#110e0b; --muted:#6d625f; --line:#e7d9d8;
   --red:#d64440; --red-ink:#ffffff; --rose:#d14a56; --pink:#dfaec2; --blush:#eed1d2; --sage:#629482; --indigo:#3c4b90; --gold:#e3b35d;
@@ -35,29 +35,77 @@
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
 button,input{font:inherit;color:inherit}
-h1,h2,p{margin:0}
+h1,h2,p,ol{margin:0}
+ol{padding:0;list-style:none}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 
-.app{max-width:1120px;margin-inline:auto;padding-inline:16px;padding-block:22px 60px;display:grid;gap:26px}
-
-/* ---- masthead ---- */
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;padding-bottom:20px;border-bottom:1px solid var(--line)}
-.brandmark{display:block;width:158px;aspect-ratio:1000/352;background:var(--ink);flex:none;
-  -webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
-.titles{display:grid;gap:4px;min-width:0;padding-left:26px;border-left:2px solid var(--red)}
-.top h1{font-family:var(--head);font-weight:600;font-size:clamp(21px,3.3vw,32px);letter-spacing:.2em;text-transform:uppercase;line-height:1.15;text-wrap:balance;padding-top:.18em}
-.top p{font-family:var(--sub);font-style:italic;font-size:clamp(16px,2vw,19px);color:var(--muted)}
-@media (max-width:520px){.titles{padding-left:0;border-left:0}}
-
-.main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:start}
-@media (max-width:840px){.main{grid-template-columns:minmax(0,1fr)}}
-.booth,.side{display:grid;gap:18px;min-width:0}
-
+.app{max-width:1120px;margin-inline:auto;padding-inline:16px;padding-block:16px 0;display:grid;gap:22px}
+.brandmark{display:block;width:150px;aspect-ratio:1000/352;background:var(--ink);flex:none;-webkit-mask:center/contain no-repeat;mask:center/contain no-repeat}
 .label{font-family:var(--head);font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 
+/* ---- top bar with progress ---- */
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.brand{border:0;background:none;padding:4px;cursor:pointer}
+.brand .brandmark{width:112px}
+.steps{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:center}
+.steps li{display:flex;align-items:center;gap:8px;color:var(--muted);font-family:var(--head);font-weight:600;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase}
+.steps b{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);font-size:12px;letter-spacing:0;padding-top:2px}
+.steps span{padding-top:2px}
+.steps li.on{color:var(--ink)}
+.steps li.on b{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.steps li.done b{background:var(--red);border-color:var(--red);color:var(--red-ink)}
+@media (max-width:560px){.steps li:not(.on) span{display:none}.steps{gap:6px 10px}}
+
+/* ---- screens ---- */
+.screen{display:grid;gap:22px;min-width:0}
+.screen.enter{animation:enter .45s ease both}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.screen-head{display:grid;gap:4px}
+.screen-head h2{font-family:var(--head);font-weight:600;font-size:clamp(20px,3.2vw,30px);letter-spacing:.2em;text-transform:uppercase;line-height:1.2;text-wrap:balance;padding-top:.15em}
+.screen-head p{font-family:var(--sub);font-style:italic;font-size:clamp(16px,2vw,19px);color:var(--muted)}
+.cols{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px;align-items:start}
+.cols.cam{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+@media (max-width:840px){.cols,.cols.cam{grid-template-columns:minmax(0,1fr);gap:20px}}
+.col{display:grid;gap:18px;min-width:0}
+.nav{position:sticky;bottom:0;z-index:3;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 14px;
+  padding-block:14px;background:var(--bg);border-top:1px solid var(--line)}
+.nav .hint{flex:1 1 180px;text-align:right}
+@media (max-width:560px){.nav .hint{order:-1;flex-basis:100%;text-align:center}}
+
+/* ---- welcome and thank-you panels: artwork-backed, each commits to one look ---- */
+.hero{position:relative;overflow:hidden;border-radius:4px;display:grid;place-content:center;justify-items:center;gap:20px;text-align:center;
+  padding:56px 22px;min-height:min(780px,calc(100vh - 34px));min-height:min(780px,calc(100svh - 34px));
+  --ink:#ffffff;--bg:#110e0b;--muted:#e6dcd9;--line:rgba(255,255,255,.4);--red:#d64440;--red-ink:#ffffff;--focus:#e3b35d;
+  background:#110e0b;color:#fff}
+.hero.light{--ink:#110e0b;--bg:#ffffff;--muted:#4c4340;--line:rgba(17,14,11,.3);--focus:#3c4b90;background:#eed1d2;color:#110e0b}
+.hero .art{position:absolute;inset:-4%;background:center/cover no-repeat;animation:drift 28s ease-in-out infinite alternate}
+@keyframes drift{from{transform:scale(1)}to{transform:scale(1.09) translateY(-1.5%)}}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(17,14,11,.74) 0%,rgba(17,14,11,.5) 48%,rgba(17,14,11,.8) 100%)}
+.hero.light::after{background:rgba(255,255,255,.66)}
+.hero > :not(.art){position:relative;z-index:1}
+.hero .brandmark{width:clamp(150px,26vw,210px)}
+.hero h1,.hero h2{font-family:var(--head);font-weight:600;text-transform:uppercase;line-height:1.12;text-wrap:balance}
+.hero h1{font-size:clamp(32px,7.4vw,74px);letter-spacing:.22em;padding-left:.22em;padding-top:.1em}
+.hero h2{font-size:clamp(24px,4.6vw,44px);letter-spacing:.18em;padding-left:.18em}
+.hero .sub{font-family:var(--sub);font-style:italic;font-size:clamp(19px,2.7vw,27px);color:var(--muted);max-width:30ch}
+.hero .body{max-width:44ch;font-size:16px}
+.how{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 0;font-family:var(--head);font-weight:600;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.how li{padding-inline:16px}
+.how li + li{border-left:1px solid var(--line)}
+@media (max-width:560px){.how{flex-direction:column;gap:6px}.how li + li{border-left:0}}
+.fineprint{font-size:12.5px;color:var(--muted)}
+.thanks-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center;justify-items:start;text-align:left;max-width:860px}
+.thanks-grid .txt{display:grid;gap:16px;justify-items:start}
+.thanks-grid h2{padding-left:0}
+.thanks-grid .strip-view{max-height:min(54vh,460px);width:auto;max-width:40vw;transform:rotate(-4deg);box-shadow:0 2px 4px rgba(17,14,11,.25),0 26px 44px -16px rgba(17,14,11,.55)}
+@media (max-width:640px){.thanks-grid{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.thanks-grid .txt{justify-items:center}.thanks-grid .strip-view{max-height:34vh;max-width:70vw}}
+.socials{display:flex;flex-wrap:wrap;gap:10px}
+@media (max-width:640px){.socials{justify-content:center}}
+a.btn{text-decoration:none;display:inline-flex;align-items:center}
+
 /* ---- stage ---- */
-.stage{position:relative;aspect-ratio:var(--ar,1.4);width:min(100%,calc(66vh * var(--ar,1.4)));max-width:100%;margin-inline:auto;
+.stage{position:relative;aspect-ratio:var(--ar,1.4);width:min(100%,calc(62vh * var(--ar,1.4)));max-width:100%;margin-inline:auto;
   background:var(--stage);color:var(--stage-ink);border-radius:3px;overflow:hidden}
 .stage.compact{aspect-ratio:auto;width:100%;min-height:250px}
 .stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -88,6 +136,7 @@ h1,h2,p{margin:0}
 .stage-msg .pose{font-family:var(--sub);font-style:italic;font-size:18px;color:var(--blush)}
 .stage-msg .big{font-family:var(--head);font-weight:600;font-size:clamp(18px,3.2vw,25px);letter-spacing:.2em;text-transform:uppercase;line-height:1.3;text-wrap:balance}
 .stage-msg p{max-width:36ch;color:#d9cfcc}
+.stage-msg .btn{--ink:#ffffff;--bg:#110e0b}
 
 /* ---- tray of poses ---- */
 .tray{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
@@ -101,41 +150,43 @@ h1,h2,p{margin:0}
 
 /* ---- buttons ---- */
 .controls{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center}
-.btn{border:1.5px solid var(--ink);background:transparent;border-radius:2px;padding:15px 20px 11px;min-height:46px;cursor:pointer;
+.btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:2px;padding:15px 20px 11px;min-height:46px;cursor:pointer;
   font-family:var(--head);font-weight:600;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;line-height:1.2}
+.btn small{font-family:var(--body);font-size:12px;font-weight:400;letter-spacing:0;text-transform:none;margin-left:10px;opacity:.75}
 .btn:hover{background:var(--ink);color:var(--bg)}
-.btn[disabled]{opacity:.4;cursor:not-allowed;background:transparent;color:inherit}
+.btn[disabled]{opacity:.4;cursor:not-allowed;background:transparent;color:var(--ink)}
 .btn.primary{background:var(--ink);color:var(--bg)}
 .btn.primary:hover{background:var(--red);border-color:var(--red);color:var(--red-ink)}
 .btn.primary[disabled]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.go{background:var(--red);border-color:var(--red);color:var(--red-ink)}
+.btn.go:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.go[disabled]{background:var(--red);border-color:var(--red);color:var(--red-ink)}
 .shutter{display:inline-flex;align-items:center;gap:14px;border:0;border-radius:999px;background:var(--red);color:var(--red-ink);
-  padding:8px 30px 8px 8px;min-height:62px;cursor:pointer;box-shadow:0 5px 0 rgba(17,14,11,.22);
+  padding:8px 30px 8px 8px;min-height:62px;cursor:pointer;box-shadow:0 5px 0 rgba(17,14,11,.3);
   font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase}
 .shutter span:last-child{padding-top:.28em}
-.shutter:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(17,14,11,.22)}
+.shutter:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(17,14,11,.3)}
 .shutter .dot{width:46px;height:46px;border-radius:50%;background:#fff;border:4px solid rgba(17,14,11,.16);flex:none}
 .shutter[disabled]{opacity:.5;cursor:not-allowed}
 
 /* ---- filters ---- */
-.group{display:grid;gap:11px}
-.filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:10px}
-.filters button{display:grid;gap:6px;padding:4px 4px 7px;border:1.5px solid transparent;border-radius:3px;background:var(--surface);cursor:pointer;
+.filters{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:9px}
+.filters button{display:grid;gap:6px;padding:4px 4px 7px;border:1.5px solid var(--line);border-radius:3px;background:var(--surface);cursor:pointer;
   font-size:12.5px;text-align:center;min-width:0;color:var(--muted)}
 .filters button canvas{width:100%;aspect-ratio:4/3;border-radius:2px;display:block;background:var(--stage)}
-.filters button[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);font-weight:600}
+.filters button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink);font-weight:600}
 
 /* ---- strip on the counter ---- */
-.strip-wrap{background:var(--counter);border-radius:3px;padding:30px 16px;display:grid;place-items:center;min-height:240px}
-#stripImg{display:block;max-height:64vh;width:auto;max-width:100%;transform:rotate(-1.2deg);
-  box-shadow:0 1px 2px rgba(17,14,11,.25),0 20px 36px -14px rgba(17,14,11,.5);-webkit-touch-callout:default;user-select:auto}
-.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.hint{font-family:var(--sub);font-style:italic;color:var(--muted);font-size:15px;text-align:center}
+.strip-wrap{background:var(--counter);border-radius:3px;padding:28px 16px;display:grid;place-items:center;min-height:240px}
+@media (min-width:841px){.strip-wrap.stick{position:sticky;top:16px}}
+.strip-view{display:block;-webkit-touch-callout:default;user-select:auto}
+.strip-wrap .strip-view{max-height:62vh;width:auto;max-width:100%;transform:rotate(-1.2deg);
+  box-shadow:0 1px 2px rgba(17,14,11,.25),0 20px 36px -14px rgba(17,14,11,.5)}
+@media (max-width:840px){.strip-wrap{padding:20px 16px;min-height:0}.strip-wrap .strip-view{max-height:38vh}}
+.hint{font-family:var(--sub);font-style:italic;color:var(--muted);font-size:15px}
 
-/* ---- customise panel ---- */
+/* ---- option panels ---- */
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:22px 20px;display:grid;gap:22px}
-.panel-head{display:grid;gap:2px}
-.panel h2{font-family:var(--head);font-size:17px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding-top:.15em}
-.panel-head p{font-family:var(--sub);font-style:italic;color:var(--muted);font-size:16px}
 fieldset{border:0;padding:0;margin:0;display:grid;gap:10px;min-width:0}
 legend{padding:0;margin-bottom:10px}
 .opts{display:flex;flex-wrap:wrap;gap:8px}
@@ -167,71 +218,77 @@ legend{padding:0;margin-bottom:10px}
 .check input{width:19px;height:19px;accent-color:var(--red)}
 .row{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
 
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
+/* ---- the print screen: a booth head with the strip feeding out of its slot ---- */
+.print-stage{background:var(--counter);border-radius:3px;padding:clamp(22px,4vw,44px) 16px;display:grid;justify-items:center;gap:22px}
+.machine{display:grid;justify-items:center;width:fit-content;max-width:100%}
+.machine-top{position:relative;z-index:2;width:100%;min-width:min(320px,100%);background:#110e0b;color:#fff;border-radius:16px 16px 5px 5px;
+  padding:18px 22px 26px;display:grid;gap:8px;justify-items:center;text-align:center;box-shadow:0 10px 22px -10px rgba(17,14,11,.6)}
+.plate{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:600;font-size:12px;letter-spacing:.24em;text-transform:uppercase;padding-top:3px}
+.lamp{width:10px;height:10px;border-radius:50%;background:#d64440;flex:none;transform:translateY(-2px)}
+.lamp.busy{animation:blink .7s steps(2,start) infinite}
+.lamp.ok{background:#7fc0a6}
+@keyframes blink{to{opacity:.25}}
+.status{font-family:var(--sub);font-style:italic;font-size:18px;color:#eed1d2}
+.slot{position:absolute;left:16px;right:16px;bottom:9px;height:7px;border-radius:4px;background:#000;box-shadow:inset 0 -1px 0 rgba(255,255,255,.16)}
+.chute{position:relative;z-index:1;margin-top:-13px;padding:0 26px 30px;overflow:hidden}
+.chute .strip-view{max-height:56vh;width:auto;max-width:100%;transform:translateY(-102%);transform-origin:50% 0;
+  box-shadow:0 1px 2px rgba(17,14,11,.25),0 20px 36px -14px rgba(17,14,11,.5)}
+.chute.go .strip-view{animation:feed 4.2s linear forwards}
+.chute.done{overflow:visible}
+.chute.done .strip-view{transform:rotate(-1.4deg);transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+/* fed out in pulses, the way a booth printer advances paper */
+@keyframes feed{0%{transform:translateY(-102%)}18%{transform:translateY(-76%)}24%{transform:translateY(-76%)}42%{transform:translateY(-50%)}48%{transform:translateY(-50%)}
+  66%{transform:translateY(-24%)}72%{transform:translateY(-24%)}94%{transform:translateY(1.2%)}100%{transform:translateY(0)}}
+.print-actions{display:grid;justify-items:center;gap:12px;transition:opacity .4s}
+.print-actions[data-ready="0"]{opacity:0;visibility:hidden}
+.print-actions .row{justify-content:center;gap:12px}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
   background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:2px;font-weight:500;max-width:calc(100% - 32px);text-align:center;transition:opacity .2s,transform .2s;z-index:5}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){
-  .count.tick,.flash.go{animation:none}
-  #stripImg{transform:none}
-  .toast{transition:none}
+  .count.tick,.flash.go,.screen.enter,.hero .art,.lamp.busy,.chute.go .strip-view{animation:none}
+  .strip-wrap .strip-view,.thanks-grid .strip-view{transform:none}
+  .chute.done .strip-view,.toast,.print-actions{transition:none}
 }
 </style>
 </head>
 <body>
 
-<div class="app">
-  <header class="top">
-    <span class="brandmark" id="brandmark" role="img" aria-label="Naumi Hotels"></span>
-    <div class="titles">
-      <h1>The Photobooth</h1>
-      <p>Strike a pose, choose a mood, take the strip home.</p>
-    </div>
+<div class="app" id="app">
+  <header class="bar" id="bar" hidden>
+    <button class="brand" id="homeBtn" type="button" aria-label="Back to the welcome screen"><span class="brandmark"></span></button>
+    <ol class="steps" id="steps" aria-label="Progress">
+      <li data-s="design"><b>1</b><span>Design</span></li>
+      <li data-s="pose"><b>2</b><span>Pose</span></li>
+      <li data-s="finish"><b>3</b><span>Finish</span></li>
+      <li data-s="print"><b>4</b><span>Print</span></li>
+    </ol>
   </header>
 
-  <main class="main">
-    <section class="booth" aria-label="Camera">
-      <div class="stage" id="stage">
-        <canvas id="pv" width="640" height="458"></canvas>
-        <video id="video" playsinline muted></video>
-        <div class="marks" aria-hidden="true"></div>
-        <div class="hud" id="hud" hidden><span id="poseLabel" class="rec">Pose 1/4</span><span id="filterLabel">Natural</span></div>
-        <div class="count" id="count" aria-live="assertive"></div>
-        <div class="flash" id="flash" aria-hidden="true"></div>
-        <div class="stage-msg" id="stageMsg">
-          <span class="pose" id="msgPose">Pose 1 of 4</span>
-          <span class="big" id="msgBig">Ready when you are</span>
-          <p id="msgText">Turn on the camera, then press the red button. Photos stay on this device.</p>
-          <button class="btn primary" id="camOn" type="button" hidden>Turn on camera</button>
-        </div>
-      </div>
+  <!-- welcome -->
+  <section class="screen" id="s-welcome" aria-label="Welcome">
+    <div class="hero">
+      <div class="art" id="heroArt" aria-hidden="true"></div>
+      <span class="brandmark" role="img" aria-label="Naumi Hotels"></span>
+      <h1>The Photobooth</h1>
+      <p class="sub">Strike a pose and take the strip home.</p>
+      <button class="shutter" id="enter" type="button"><span class="dot" aria-hidden="true"></span><span>Step inside</span></button>
+      <ol class="how">
+        <li>Design your strip</li>
+        <li>Strike your poses</li>
+        <li>Take it home</li>
+      </ol>
+      <p class="fineprint">Your photos stay on your device.</p>
+    </div>
+  </section>
 
-      <div class="tray" id="tray" aria-label="Poses"></div>
-
-      <div class="controls">
-        <button class="btn" id="flip" type="button" hidden>Flip camera</button>
-        <button class="shutter" id="shutter" type="button"><span class="dot" aria-hidden="true"></span><span id="shutterLabel">Start</span></button>
-        <button class="btn" id="upload" type="button">Upload photos</button>
-        <input class="vh" id="snapInput" type="file" accept="image/*" capture="user" tabindex="-1" aria-hidden="true">
-        <input class="vh" id="uploadInput" type="file" accept="image/*" multiple tabindex="-1" aria-hidden="true">
-      </div>
-
-      <div class="group">
-        <h2 class="label" id="filtersTitle">Filter</h2>
-        <div class="filters" id="filters" role="group" aria-labelledby="filtersTitle"></div>
-      </div>
-    </section>
-
-    <section class="side" aria-label="Your strip">
-      <div class="strip-wrap"><img id="stripImg" alt="Preview of your photo strip"></div>
-      <div class="actions">
-        <button class="btn primary" id="save" type="button">Save strip</button>
-        <button class="btn" id="reset" type="button">Start over</button>
-      </div>
-      <p class="hint" id="saveHint" hidden>You can also press and hold the strip to save it to Photos.</p>
-
+  <!-- 1 design -->
+  <section class="screen" id="s-design" aria-label="Design your strip" hidden>
+    <div class="screen-head"><h2>Design your strip</h2><p>Pick a layout, a backdrop and your hotel.</p></div>
+    <div class="cols">
+      <div class="strip-wrap stick"><img class="strip-view" alt="Preview of your photo strip"></div>
       <div class="panel">
-        <div class="panel-head"><h2>Make it yours</h2><p>Dress the strip before you save it.</p></div>
-
         <fieldset>
           <legend class="label">Layout</legend>
           <div class="opts" id="layoutOpts">
@@ -240,38 +297,56 @@ legend{padding:0;margin-bottom:10px}
             <label class="opt"><input type="radio" name="layout" id="layout-grid4" value="grid4"><span><i class="glyph g22"><i></i><i></i><i></i><i></i></i><b>Postcard<small>4 poses · 4×6 in</small></b></span></label>
           </div>
         </fieldset>
-
         <fieldset>
           <legend class="label">Background</legend>
           <div class="opts" id="artOpts"></div>
-          <div class="row">
-            <div class="opts" id="swatches"></div>
-          </div>
+          <div class="row"><div class="opts" id="swatches"></div></div>
         </fieldset>
-
         <fieldset>
           <legend class="label">Hotel logo</legend>
           <div class="logos" id="logoOpts"></div>
         </fieldset>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn" id="backDesign" type="button">Back</button>
+      <button class="btn go" id="nextDesign" type="button">Next: camera</button>
+    </div>
+  </section>
 
-        <fieldset>
-          <legend class="label">Caption</legend>
-          <input class="text" id="caption" type="text" maxlength="40" placeholder="Optional, e.g. Maya &amp; Jo" aria-label="Caption on the strip">
-          <div class="opts" id="fontOpts">
-            <label class="opt f-italic"><input type="radio" name="font" id="font-italic" value="italic"><span>Italic</span></label>
-            <label class="opt f-headline"><input type="radio" name="font" id="font-headline" value="headline"><span>Headline</span></label>
-            <label class="opt f-plain"><input type="radio" name="font" id="font-plain" value="plain"><span>Plain</span></label>
+  <!-- 2 pose -->
+  <section class="screen" id="s-pose" aria-label="Take your photos" hidden>
+    <div class="screen-head"><h2>Strike a pose</h2><p>Choose a filter and a countdown, then press the red button.</p></div>
+    <div class="cols cam">
+      <div class="col">
+        <div class="stage" id="stage">
+          <canvas id="pv" width="640" height="458"></canvas>
+          <video id="video" playsinline muted></video>
+          <div class="marks" aria-hidden="true"></div>
+          <div class="hud" id="hud" hidden><span id="poseLabel" class="rec">Pose 1/4</span><span id="filterLabel">Natural</span></div>
+          <div class="count" id="count" aria-live="assertive"></div>
+          <div class="flash" id="flash" aria-hidden="true"></div>
+          <div class="stage-msg" id="stageMsg">
+            <span class="pose" id="msgPose">Pose 1 of 4</span>
+            <span class="big" id="msgBig">Ready when you are</span>
+            <p id="msgText">Allow the camera when your browser asks. Photos stay on this device.</p>
+            <button class="btn primary" id="camOn" type="button" hidden>Turn on camera</button>
           </div>
-        </fieldset>
-
+        </div>
+        <div class="tray" id="tray" aria-label="Poses"></div>
+        <div class="controls">
+          <button class="btn" id="flip" type="button" hidden>Flip camera</button>
+          <button class="shutter" id="shutter" type="button"><span class="dot" aria-hidden="true"></span><span id="shutterLabel">Start</span></button>
+          <button class="btn" id="upload" type="button">Upload photos</button>
+          <input class="vh" id="snapInput" type="file" accept="image/*" capture="user" tabindex="-1" aria-hidden="true">
+          <input class="vh" id="uploadInput" type="file" accept="image/*" multiple tabindex="-1" aria-hidden="true">
+        </div>
+      </div>
+      <div class="panel">
         <fieldset>
-          <legend class="label">Details</legend>
-          <div class="row">
-            <label class="check"><input type="checkbox" id="showDate">Date stamp</label>
-            <label class="check"><input type="checkbox" id="rounded">Rounded corners</label>
-          </div>
+          <legend class="label">Filter</legend>
+          <div class="filters" role="group" aria-label="Filter"></div>
         </fieldset>
-
         <fieldset id="timerField">
           <legend class="label">Countdown</legend>
           <div class="opts">
@@ -281,8 +356,95 @@ legend{padding:0;margin-bottom:10px}
           </div>
         </fieldset>
       </div>
-    </section>
-  </main>
+    </div>
+    <div class="nav">
+      <button class="btn" id="backPose" type="button">Back</button>
+      <p class="hint" id="poseHint" role="status"></p>
+      <button class="btn go" id="nextPose" type="button">Next: finish</button>
+    </div>
+  </section>
+
+  <!-- 3 finish -->
+  <section class="screen" id="s-finish" aria-label="Finishing touches" hidden>
+    <div class="screen-head"><h2>Finishing touches</h2><p>Change the filter, add a caption, then send it to print.</p></div>
+    <div class="cols">
+      <div class="strip-wrap stick"><img class="strip-view" alt="Your photo strip so far"></div>
+      <div class="panel">
+        <fieldset>
+          <legend class="label">Filter</legend>
+          <div class="filters" role="group" aria-label="Filter"></div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Caption</legend>
+          <input class="text" id="caption" type="text" maxlength="40" placeholder="Optional, e.g. Maya &amp; Jo" aria-label="Caption on the strip" autocomplete="off">
+          <div class="opts" id="fontOpts">
+            <label class="opt f-italic"><input type="radio" name="font" id="font-italic" value="italic"><span>Italic</span></label>
+            <label class="opt f-headline"><input type="radio" name="font" id="font-headline" value="headline"><span>Headline</span></label>
+            <label class="opt f-plain"><input type="radio" name="font" id="font-plain" value="plain"><span>Plain</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Details</legend>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="showDate">Date stamp</label>
+            <label class="check"><input type="checkbox" id="rounded">Rounded corners</label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn" id="backFinish" type="button">Retake photos</button>
+      <p class="hint" id="finishHint" role="status"></p>
+      <button class="btn go" id="nextFinish" type="button">Print my strip</button>
+    </div>
+  </section>
+
+  <!-- 4 print -->
+  <section class="screen" id="s-print" aria-label="Your printed strip" hidden>
+    <div class="print-stage">
+      <div class="machine">
+        <div class="machine-top">
+          <span class="plate"><span class="lamp busy" id="lamp" aria-hidden="true"></span>Naumi Photobooth</span>
+          <span class="status" id="printStatus" role="status">Printing your strip</span>
+          <span class="slot" aria-hidden="true"></span>
+        </div>
+        <div class="chute" id="chute"><img class="strip-view" id="printImg" alt="Your finished photo strip"></div>
+      </div>
+      <div class="print-actions" id="printActions" data-ready="0">
+        <div class="row">
+          <button class="btn go" id="save" type="button">Save strip</button>
+          <button class="btn" id="editStrip" type="button">Change something</button>
+          <button class="btn" id="toThanks" type="button">Next</button>
+        </div>
+        <p class="hint" id="saveHint" hidden>You can also press and hold the strip to save it to Photos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- thank you -->
+  <section class="screen" id="s-thanks" aria-label="Tag us" hidden>
+    <div class="hero light">
+      <div class="art" id="thanksArt" aria-hidden="true"></div>
+      <div class="thanks-grid">
+        <img class="strip-view" alt="Your photo strip">
+        <div class="txt">
+          <span class="brandmark" role="img" aria-label="Naumi Hotels"></span>
+          <p class="sub">That's a wrap.</p>
+          <h2>Tag us and give us a follow</h2>
+          <p class="body">Post your strip and tag <strong>@naumihotels</strong>. We would love to see it.</p>
+          <div class="socials">
+            <a class="btn primary" href="https://www.instagram.com/naumihotels" target="_blank" rel="noopener">Instagram<small>@naumihotels</small></a>
+            <a class="btn" href="https://www.tiktok.com/@naumihotels" target="_blank" rel="noopener">TikTok<small>@naumihotels</small></a>
+            <a class="btn" href="https://www.facebook.com/NaumiHotels/" target="_blank" rel="noopener">Facebook<small>NaumiHotels</small></a>
+          </div>
+          <div class="socials">
+            <button class="btn go" id="again" type="button">Make another strip</button>
+            <button class="btn" id="backToStrip" type="button">See my strip again</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -391,7 +553,7 @@ const curLayout = () => Object.assign({}, LAYOUTS[state.layout], art() ? ART_DIM
 const persist = () => { try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} };
 
 let shots = [];            // raw, unfiltered frames (canvases); filters are applied at render time
-let uid = 0, mode = 'idle', busy = false, seq = 0, target = 0;
+let uid = 0, mode = 'idle', busy = false, seq = 0, target = 0, cur = 'welcome';
 let stream = null, facing = 'user', raf = 0, wake = null, downloads = null;
 const count = () => { const L = LAYOUTS[state.layout]; return L.cols*L.rows; };
 if(state.logo!=='none' && !LOGOS.some(l=>l.id===state.logo)) state.logo='hotels';
@@ -410,8 +572,8 @@ const firstEmpty = () => { for(let i=0;i<count();i++) if(!shots[i]) return i; re
 const stage=$('#stage'), pv=$('#pv'), video=$('#video'), hud=$('#hud'), poseLabel=$('#poseLabel'), filterLabel=$('#filterLabel');
 const countEl=$('#count'), flashEl=$('#flash'), stageMsg=$('#stageMsg'), msgPose=$('#msgPose'), msgBig=$('#msgBig'), msgText=$('#msgText'), camOn=$('#camOn');
 const tray=$('#tray'), shutter=$('#shutter'), shutterLabel=$('#shutterLabel'), flipBtn=$('#flip'), uploadBtn=$('#upload');
-const snapInput=$('#snapInput'), uploadInput=$('#uploadInput'), filtersEl=$('#filters'), stripImg=$('#stripImg');
-const saveBtn=$('#save'), resetBtn=$('#reset'), toastEl=$('#toast');
+const snapInput=$('#snapInput'), uploadInput=$('#uploadInput'), saveBtn=$('#save'), toastEl=$('#toast');
+const stripViews=()=>document.querySelectorAll('.strip-view'), filterBtns=()=>document.querySelectorAll('.filters button');
 const pctx = pv.getContext('2d',{willReadFrequently:true});
 const out = document.createElement('canvas'), octx = out.getContext('2d');
 const thumbSrc = document.createElement('canvas'); thumbSrc.width=96; thumbSrc.height=72;
@@ -505,7 +667,7 @@ function renderStrip(){
 let stripQueued=false;
 function refreshStrip(){
   if(stripQueued) return; stripQueued=true;
-  requestAnimationFrame(()=>{ stripQueued=false; renderStrip(); stripImg.src = out.toDataURL('image/jpeg',.9); });
+  requestAnimationFrame(()=>{ stripQueued=false; renderStrip(); const url=out.toDataURL('image/jpeg',.9); stripViews().forEach(i=>{ i.src=url; }); });
 }
 
 /* ---------- stage, tray, filter swatches ---------- */
@@ -523,7 +685,7 @@ function drawStill(){ // latest pose on the stage when there is no live picture
   applyFilter(pctx,pv.width,pv.height,filterById(state.filter));
 }
 function loop(){
-  if(mode!=='live') return;
+  if(mode!=='live' || cur!=='pose') return;
   if(video.readyState>=2 && video.videoWidth){
     const r = coverRect(video.videoWidth,video.videoHeight,pv.width,pv.height);
     pctx.save(); if(facing==='user'){ pctx.translate(pv.width,0); pctx.scale(-1,1); }
@@ -550,16 +712,16 @@ function buildTray(){
   }
 }
 function buildFilters(){
-  FILTERS.forEach(f=>{
-    const b=document.createElement('button'); b.type='button'; b.dataset.id=f.id; b.id='filter-'+f.id;
+  document.querySelectorAll('.filters').forEach((box,n)=>FILTERS.forEach(f=>{
+    const b=document.createElement('button'); b.type='button'; b.dataset.id=f.id; b.id='filter'+(n?n+1:'')+'-'+f.id;
     const c=document.createElement('canvas'); c.width=96; c.height=72; b.appendChild(c);
     b.appendChild(document.createTextNode(f.name));
     b.addEventListener('click',()=>{ state.filter=f.id; persist(); syncFilters(); if(mode!=='live') drawStill(); buildTray(); refreshStrip(); });
-    filtersEl.appendChild(b);
-  });
+    box.appendChild(b);
+  }));
 }
 function syncFilters(){
-  filtersEl.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.id===state.filter)));
+  filterBtns().forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.id===state.filter)));
   filterLabel.textContent = filterById(state.filter).name;
 }
 function refreshThumbs(){
@@ -569,12 +731,12 @@ function refreshThumbs(){
     const r=coverRect(video.videoWidth,video.videoHeight,96,72);
     tctx.save(); if(facing==='user'){ tctx.translate(96,0); tctx.scale(-1,1); } tctx.drawImage(video,r[0],r[1],r[2],r[3],0,0,96,72); tctx.restore();
   } else sampleScene(tctx,96,72);
-  filtersEl.querySelectorAll('button').forEach(b=>{
+  filterBtns().forEach(b=>{
     const x=b.firstChild.getContext('2d',{willReadFrequently:true});
     x.drawImage(thumbSrc,0,0); applyFilter(x,96,72,filterById(b.dataset.id));
   });
 }
-setInterval(()=>{ if(mode==='live' && !filled() && !document.hidden) refreshThumbs(); }, 2000);
+setInterval(()=>{ if(mode==='live' && cur==='pose' && !filled() && !document.hidden) refreshThumbs(); }, 2000);
 
 function syncUI(){
   const n=count(), done=filled(), next=firstEmpty();
@@ -594,11 +756,10 @@ function syncUI(){
   if(showMsg){
     msgPose.textContent = 'Pose '+((next<0?0:next)+1)+' of '+n;
     camOn.hidden = mode!=='idle';
-    if(mode==='idle'){ msgBig.textContent='Ready when you are'; msgText.textContent='Turn on the camera, then press the red button. Photos stay on this device.'; }
+    if(mode==='idle'){ msgBig.textContent='Ready when you are'; msgText.textContent='Allow the camera when your browser asks. Photos stay on this device.'; }
     else { msgBig.textContent='One photo per pose'; msgText.textContent='Press the red button to take or choose a photo for each pose. Photos stay on this device.'; }
   }
-  saveBtn.disabled = !done; resetBtn.disabled = !done && !busy;
-  buildTray();
+  buildTray(); updateNav();
 }
 function afterShots(){ if(mode!=='live') drawStill(); refreshThumbs(); syncUI(); refreshStrip(); }
 
@@ -620,11 +781,7 @@ async function runSequence(slots){
     await sleep(900); if(my!==seq) return;
   }
   busy=false; syncUI();
-  if(filled()>=count()){ toast('Strip ready. Press Save strip.'); showStrip(); }
-}
-function showStrip(){ // on phones the strip sits below the camera, so bring it into view once every pose is in
-  const r=stripImg.getBoundingClientRect();
-  if(r.top>innerHeight*.6 || r.bottom<0){ try{ stripImg.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'}); }catch(e){ stripImg.scrollIntoView(); } }
+  if(filled()>=count()) toast('All poses are in. Tap Next when you are happy.');
 }
 function cancelSequence(){ seq++; busy=false; showCount(0); syncUI(); }
 function takeSlot(i){
@@ -652,7 +809,7 @@ async function fileToCanvas(file){
 }
 snapInput.addEventListener('change',async()=>{
   const f=snapInput.files[0]; snapInput.value=''; if(!f) return;
-  try{ shots[target]=await fileToCanvas(f); afterShots(); if(filled()>=count()){ toast('Strip ready. Press Save strip.'); setTimeout(showStrip,250); } }catch(e){ toast("That photo couldn't be opened. Try another one."); }
+  try{ shots[target]=await fileToCanvas(f); afterShots(); }catch(e){ toast("That photo couldn't be opened. Try another one."); }
 });
 uploadBtn.addEventListener('click',()=>uploadInput.click());
 uploadInput.addEventListener('change',async()=>{
@@ -701,24 +858,17 @@ saveBtn.addEventListener('click',async()=>{
   if(!blob){ toast("Couldn't make the image. Press and hold the strip to save it."); return; }
   const d=new Date(), name='photobooth-strip-'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'-'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0')+'.jpg';
   if(downloads){
-    try{ await downloads.save({filename:name,data:blob}); toast('Strip saved.'); }
+    try{ await downloads.save({filename:name,data:blob}); toast('Strip saved.'); afterSave(); }
     catch(e){ if(!e || e.code!=='declined') toast("Saving isn't available here. Press and hold the strip, or right-click it, to save."); }
     return;
   }
   if(window.claude){ toast('Press and hold the strip, or right-click it, to save.'); return; }
   try{
     const file=new File([blob],name,{type:'image/jpeg'});
-    if(coarse && navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return; }
+    if(coarse && navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); afterSave(); return; }
   }catch(e){ if(e && e.name==='AbortError') return; }
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Strip saved to your downloads.');
-});
-let armed=0;
-resetBtn.addEventListener('click',()=>{
-  if(busy) cancelSequence();
-  if(!filled()) return;
-  if(Date.now()-armed>3000){ armed=Date.now(); resetBtn.textContent='Tap again to clear photos'; setTimeout(()=>{ resetBtn.textContent='Start over'; },3000); return; }
-  armed=0; resetBtn.textContent='Start over'; shots=[]; cellCache.clear(); afterShots();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Strip saved to your downloads.'); afterSave();
 });
 
 /* ---------- customise controls ---------- */
@@ -752,7 +902,7 @@ SWATCHES.forEach(([hex,name],i)=>{
 });
 if(!/^#[0-9a-f]{6}$/i.test(state.frame)) state.frame='#ffffff';
 { // header mark is always the group logo; the strip logo is the guest's choice
-  const bm=$('#brandmark'), g=LOGOS[0]; bm.style.webkitMaskImage='url('+g.src+')'; bm.style.maskImage='url('+g.src+')';
+  const g=LOGOS[0]; document.querySelectorAll('.brandmark').forEach(bm=>{ bm.style.webkitMaskImage='url('+g.src+')'; bm.style.maskImage='url('+g.src+')'; });
   const box=$('#logoOpts');
   const tile=(id,label,src)=>{
     const l=document.createElement('label'); l.className='opt logo';
@@ -769,6 +919,66 @@ if(!/^#[0-9a-f]{6}$/i.test(state.frame)) state.frame='#ffffff';
 radios('layout','layout'); radios('font','font'); radios('timer','timer',Number);
 const cap=$('#caption'); cap.value=state.caption; cap.addEventListener('input',()=>{ state.caption=cap.value; persist(); refreshStrip(); });
 [['showDate','showDate'],['rounded','rounded']].forEach(([id,key])=>{ const el=$('#'+id); el.checked=state[key]; el.addEventListener('change',()=>{ state[key]=el.checked; persist(); refreshStrip(); }); });
+
+/* ---------- screens: welcome, design, pose, finish, print, thanks ---------- */
+const STEPS=['design','pose','finish','print'], ALL=['welcome'].concat(STEPS,['thanks']);
+const reduced = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const chute=$('#chute'), lamp=$('#lamp'), printStatus=$('#printStatus'), printActions=$('#printActions'), printImg=$('#printImg');
+const nextPose=$('#nextPose'), poseHint=$('#poseHint'), nextFinish=$('#nextFinish'), finishHint=$('#finishHint');
+function updateNav(){
+  const n=count(), done=filled(), left=n-done;
+  nextPose.disabled = busy || left>0; nextFinish.disabled = left>0;
+  poseHint.textContent = left<=0 ? 'All '+n+' poses are in. Tap a pose to redo it.' : (done ? left+' more to go.' : 'Take all '+n+' poses to continue.');
+  finishHint.textContent = left>0 ? left+' pose'+(left>1?'s are':' is')+' missing. Go back to add '+(left>1?'them':'it')+'.' : '';
+}
+function stopCam(){
+  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  cancelAnimationFrame(raf);
+  try{ if(wake){ wake.release(); wake=null; } }catch(e){}
+  if(mode==='live'){ mode='idle'; syncUI(); }
+}
+function go(step, quiet){
+  if(busy) cancelSequence();
+  cur=step;
+  ALL.forEach(s=>{ const el=$('#s-'+s); el.hidden = s!==step; el.classList.remove('enter'); });
+  const at=STEPS.indexOf(step);
+  $('#bar').hidden = at<0;
+  document.querySelectorAll('#steps li').forEach(li=>{ const i=STEPS.indexOf(li.dataset.s); li.classList.toggle('on',i===at); li.classList.toggle('done',i<at);
+    if(i===at) li.setAttribute('aria-current','step'); else li.removeAttribute('aria-current'); });
+  if(!quiet){ const el=$('#s-'+step); void el.offsetWidth; el.classList.add('enter'); window.scrollTo(0,0); }
+  cancelAnimationFrame(raf);
+  if(step==='pose'){ if(mode==='idle' && cameraAllowedHere()) startCam(); else if(mode==='live') loop(); }
+  else if(step==='welcome' || step==='print' || step==='thanks') stopCam(); // camera off once the photos are taken
+  if(step==='print') startPrint();
+}
+function startPrint(){
+  renderStrip(); const url=out.toDataURL('image/jpeg',.9); stripViews().forEach(i=>{ i.src=url; });
+  chute.classList.remove('go','done'); printActions.dataset.ready='0'; lamp.className='lamp busy'; printStatus.textContent='Printing your strip';
+  if(reduced){ finishPrint(); return; }
+  void chute.offsetWidth; chute.classList.add('go');
+}
+function finishPrint(){
+  chute.classList.remove('go'); chute.classList.add('done'); lamp.className='lamp ok'; printStatus.textContent='Your strip is ready'; printActions.dataset.ready='1';
+}
+printImg.addEventListener('animationend',e=>{ if(e.animationName==='feed') finishPrint(); });
+let saveT=0;
+function afterSave(){ clearTimeout(saveT); saveT=setTimeout(()=>{ if(cur==='print') go('thanks'); },1100); }
+$('#enter').addEventListener('click',()=>go('design'));
+$('#homeBtn').addEventListener('click',()=>go('welcome'));
+$('#backDesign').addEventListener('click',()=>go('welcome'));
+$('#nextDesign').addEventListener('click',()=>go('pose'));
+$('#backPose').addEventListener('click',()=>go('design'));
+nextPose.addEventListener('click',()=>go('finish'));
+$('#backFinish').addEventListener('click',()=>go('pose'));
+nextFinish.addEventListener('click',()=>go('print'));
+$('#editStrip').addEventListener('click',()=>go('finish'));
+$('#toThanks').addEventListener('click',()=>go('thanks'));
+$('#backToStrip').addEventListener('click',()=>go('print'));
+$('#again').addEventListener('click',()=>{ // next guest: clear the photos and caption, keep the design choices
+  shots=[]; cellCache.clear(); state.caption=''; $('#caption').value=''; persist(); afterShots(); go('welcome');
+});
+$('#heroArt').style.backgroundImage='url('+ART.noir.src+')';
+$('#thanksArt').style.backgroundImage='url('+ART.glass.src+')';
 
 /* ---------- boot ---------- */
 mode = cameraAllowedHere() ? 'idle' : 'snap';
